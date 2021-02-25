@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>React Context</title>
+    <style>
+        .box {
+            margin: 20px;
+            padding: 20px;
+            border: 1px dashed pink;
+        }
+        input {
+            margin: 20px
+        }
+    </style>
+</head>
+<body>
+    <div id="root"></div>
+
+    <script src="../libs/react.min.js"></script>
+    <script src="../libs/react-dom.min.js"></script>
+    <script src="../libs/babel.min.js"></script>
+    <script type="text/jsx">
+
+        const { createContext, Component, useContext, useState } = React;
+
+        /**
+         * createContext:    创建 context 上下文
+         * Context.Provider: 需要对子组件进行包裹，在能在子组件中获取到 context 中的 value
+         * Context.Consumer: 在类组件中使用 Render Props 的方式 context 上下文
+         * useContext:       在函数组件中使用 context 上下文
+         */
+
+        const UserContext = React.createContext();
+        const { Provider, Consumer } = UserContext;
+
+        class ClassComponent extends React.Component {
+            render() {
+                return (
+                    <div className="box">
+                        <h2>类组件</h2>
+                        <Consumer>
+                            {user => (<div>name: { user.name }</div>)}
+                        </Consumer>
+                    </div>
+                );
+            }
+        }
+
+        const FunctionComponent = () => {
+            const user = useContext(UserContext);
+            return (
+                <div className="box">
+                    <h2>函数组件</h2>
+                    <div>name: { user.name }</div>
+                </div>
+            );
+        }
+
+        const App = () => {
+            const [user, setUser] = useState({ name: '孙悟空' });
+
+            return (
+                <Provider value={user}>
+                    <h1>App</h1>
+                    <label>Change name:</label>
+                    <input
+                        placeholder="请输入用户名称"
+                        value={user.name}
+                        onChange={(e) => setUser({ name: e.target.value })}
+                    />
+                    <ClassComponent />
+                    <FunctionComponent />
+                </Provider>
+            );
+        }
+
+        ReactDOM.render(<App />, root);
+    </script>
+</body>
+
+</html>

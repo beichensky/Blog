@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>React Hooks</title>
+</head>
+<body>
+    <div id="root"></div>
+
+    <script src="../libs/react.min.js"></script>
+    <script src="../libs/react-dom.min.js"></script>
+    <script src="../libs/babel.min.js"></script>
+    <script type="text/jsx">
+
+        /**
+         * 为了能够在函数组件中也能使用状态、执行副作用等操作，引入了 hooks 的概念
+         * 
+         * useState: 函数组件也可以拥有自身状态
+         *
+         * useReducer: useState 的升级版，可以根据不同操作返回不同的状态值
+         *
+         * useEffect 用法：
+         *      1、第一个参数是副作用函数，第二个参数是依赖项集合
+         *      2、副作用函数的返回值可以是一个函数，会在当前 useEffect 被销毁时执行，可以在这里做一些状态回收，事件解除等操作
+         *      3、依赖项发生变化时，副作用操作会重新执行
+         *      4、希望 useEffect 只执行一次，则可以给依赖项一个空数组
+         *      5、希望组件的每次更新都执行 useEffect，可以不写依赖项
+         */
+
+        const { useState, useEffect, useReducer, useLayoutEffect } = React;
+
+        const App = () => {
+            // 
+            const [count, setCount] = useState(0);
+            const [num, dispatch] = useReducer((state, action) => {
+                switch(action.type) {
+                    case 'INCREMENT': 
+                        return state + 1;
+                    case 'DECREMENT': 
+                        return state - 1;
+                    default:
+                        return state;
+                }
+            }, 0)
+
+            useEffect(() => {
+                console.log('useEffect')
+                // 执行异步操作获取数据
+                setCount(10);
+            }, [])
+
+            useLayoutEffect(() => {
+                console.log('useLayoutEffect')
+                // 绑定事件
+                const handleClick = () => {
+                    alert(count);
+                }
+                const box = document.querySelector('#box');
+                box.addEventListener('click', handleClick, false);
+
+                return () => {
+                    box.removeEventListener('click', handleClick, false);
+                }
+            }, [count])
+
+            return (
+                <div>
+                    <p>count: { count }</p>
+                    <button onClick={() => setCount(count + 1)}>count increment</button>
+                    <p>num: { num }</p>
+                    <button onClick={() => dispatch({ type: 'INCREMENT' })}>num increment</button> | {' '}
+                    <button onClick={() => dispatch({ type: 'DECREMENT' })}>num decrement</button>
+                    <br />
+                    <br />
+                    <button id="box">alert count</button>
+                </div>
+            );
+        }
+
+        ReactDOM.render(<App />, root)
+
+    </script>
+</body>
+
+</html>

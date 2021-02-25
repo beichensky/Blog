@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>JS in JSX</title>
+</head>
+<body>
+    <div id="root"></div>
+
+    <script src="../libs/react.min.js"></script>
+    <script src="../libs/react-dom.min.js"></script>
+    <script src="../libs/babel.min.js"></script>
+    <script type="text/jsx">
+
+        /*
+         * 可以在 jsx 语法中编写 js 代码。
+         * 在标签内需要使用 js 语法的时候，使用 {} 将 js 表达式包裹起来即可。
+         * {} 中可以是是本类型、引用类型（对象，数组等），也可以是 js 表达式。
+         *
+         * 无论是标签内部还是标签属性，都需要在 {} 内才能使用 js 语法。
+         */
+
+        // 使用 {/* ... */} 可以在 jsx 语法中书写注释
+
+        const todoList = ['吃饭', '睡觉', '敲代码'];
+
+        function handleAlert() {
+            alert('Hello React!')
+        }
+
+        const a = 1;
+        const b = 2;
+        const showModal = true;
+        const loadingStatus = 'no-more';
+
+        const jsx = (
+            <div>
+
+                {/* style 可以使用对象的形式来写，style 的属性必须使用驼峰法则 */}
+                <h1 style={{ fontSize: 24, color: 'blue' }}>Hello React</h1>
+
+                {/* 逻辑运算符 */}
+                { a === b && <section>等于</section> }
+
+                {/* 三目运算符 */}
+                { showModal ? <section>弹窗组件</section> : null }
+
+                {/* 列表循环生成新数组，数组内元素会被直接渲染到界面，
+                    每个节点可以给一个 key 值，方便 react 在更新时的 diff 对比 */}
+                <ul>
+                    { todoList.map(todo => <li key={ todo }>{ todo }</li>) }
+                </ul>
+                <p>
+                    {
+                        {
+                            'loading': '加载中。。。。',
+                            'refreshing': '点击刷新重试！',
+                            'no-more': '没有更多了'
+                        }[loadingStatus] /** loadingStatus 是 `loading`、`refreshing`、`no-more`  其中一种状态 **/
+                    }
+                </p>
+
+                {/* 添加事件 */}
+                <button onClick={ handleAlert }>弹出提示</button>
+
+            </div>
+        );
+
+        ReactDOM.render(jsx, root);
+    </script>
+</body>
+</html>

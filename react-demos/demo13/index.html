@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>高阶组件 HOC</title>
+    
+    <style>
+        .box {
+            margin: 20px;
+            padding: 20px;
+            border: 1px solid gray;
+        }
+    </style>
+</head>
+<body>
+    <div id="root"></div>
+
+    <script src="../libs/react.min.js"></script>
+    <script src="../libs/react-dom.min.js"></script>
+    <script src="../libs/babel.min.js"></script>
+    <script type="text/jsx">
+        /**
+         * 高阶组件的两种创建方式
+         *  1、属性代理（Props Proxy）：类组件和函数组件都可以使用
+         *  2、反向继承（Inheritance Inversion, 缩写II)：只用类组件可以使用
+         */
+
+         /**
+         * 通过属性代理的方式向组件中注入 permission 属性
+         */
+        function ComposeHOC(OriginComponent) {
+            const permission = 'edit permission from ComposeHOC'
+            return (props) => <OriginComponent {...props} permission={permission} />
+        }
+
+        /**
+         * 通过反向继承的方式向组件中注入 DOM 节点
+         */
+        function iiHOC(OriginComponent) {
+            return class WrapperComponent extends OriginComponent {
+
+                render() {
+                    return <div>
+                            <h1>Title from iiHOC</h1>
+                            { super.render() }
+                        </div>;
+                }
+            }
+        }
+
+        const ComponentA = (props) => <h2 className="box">ComponentA props permission: { props.permission }</h2>
+        class ComponentB extends React.Component {
+            render() {
+                return <h2 className="box">ComponentB</h2>;
+            }
+        }
+
+        // 使用高阶组件包裹 A、B 组件
+        const WrapperComponentA = ComposeHOC(ComponentA);
+        const WrapperComponentB = iiHOC(ComponentB);
+
+
+        const App = () => (<div><WrapperComponentA /><WrapperComponentB /></div>);
+
+        ReactDOM.render(<App />, root);
+    </script>
+</body>
+
+</html>

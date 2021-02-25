@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>React JSX</title>
+    
+    <style>
+        .blue {
+            color: blue;
+        }
+    </style>
+</head>
+<body>
+    <div id="root"></div>
+
+    <script src="../libs/react.min.js"></script>
+    <script src="../libs/react-dom.min.js"></script>
+    <script src="../libs/babel.min.js"></script>
+    <script type="text/jsx">
+        // 利用 babel 可以直接在 javascript 环境下使用 jsx 语法
+    
+
+        // 由于 class 是关键字，所以在 jsx 中给元素设置 class 需要使用 className
+        const jsx = (
+            <div>
+                <h1 className="blue">Hello React</h1>
+                <p>用于构建用户界面的 JavaScript 库</p>
+            </div>
+        );
+
+        ReactDOM.render(jsx, root);
+    </script>
+</body>
+
+</html>

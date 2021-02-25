@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>受控组件</title>
+</head>
+<body>
+    <div id="root"></div>
+
+    <script src="../libs/react.min.js"></script>
+    <script src="../libs/react-dom.min.js"></script>
+    <script src="../libs/babel.min.js"></script>
+    <script type="text/jsx">
+        /**
+         * 受控组件：
+         *      组件的属性值会受到 React state 的控制，
+         *      并且在组件的属性值发生变化时，React 的 state 值会做相应的修改。
+         */
+
+        class App extends React.Component {
+
+            state = {
+                username: ''
+            }
+
+            handleNameChange = (e) => {
+                this.setState({ username: e.target.value });
+            }
+
+            handleSubmit = () => {
+                const { username } = this.state;
+                if (username) {
+                    alert(`提交成功，username = ${ username }`);
+                } else {
+                    alert('请填写用户名！');
+                }
+            }
+
+            render() {
+                const { username } = this.state
+                return (
+                    <div>
+                        <p>username: { username }</p>
+                        <section>
+                            <label>用户名：</label>
+                            <input
+                                placeholader="请输入用户名"
+                                value={ username }
+                                onChange={ this.handleNameChange }
+                            />
+                        </section>
+                        <br />
+                        <button onClick={ this.handleSubmit }>submit</button>
+                    </div>
+                );
+            }
+        }
+
+        ReactDOM.render(<App />, root);
+    </script>
+</body>
+
+</html>

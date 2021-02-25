@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>React Refs</title>
+    <style>
+        .box {
+            margin: 20px;
+            padding: 20px;
+            border: 1px dashed pink;
+        }
+    </style>
+</head>
+<body>
+    <div id="root"></div>
+
+    <script src="../libs/react.min.js"></script>
+    <script src="../libs/react-dom.min.js"></script>
+    <script src="../libs/babel.min.js"></script>
+    <script type="text/jsx">
+
+        const { createRef, useRef } = React;
+
+        /**
+         * createRef：在类组件中为元素设置 ref
+         * useRef： 在函数组件中为元素设置 ref
+         *
+         * 之前使用受控组件的方式进行表单提交。其实也可以使用 ref 的方式操作非受控组件
+         */
+
+        class ClassComponent extends React.Component{
+            inputRef = createRef();
+
+            submit = () => {
+                const { value } = this.inputRef.current;
+                if (value) {
+                    alert(`提交成功，用户名为：${ value }`);
+                } else {
+                    alert('请输入用户名！');
+                }
+            }
+
+            render() {
+                return (
+                    <div className="box">
+                        <h2>类组件</h2>
+                        <section>
+                            <label>用户名：</label>
+                            <input ref={ this.inputRef } placeholder="请输入用户名" />
+                        </section>
+                        <br />
+                        <button onClick={ this.submit }>提交</button>
+                    </div>
+                );
+            }
+        }
+
+        const FunctionComponent = () => {
+            const inputRef = useRef();
+
+            const submit = () => {
+                const { value } = inputRef.current;
+                if (value) {
+                    alert(`提交成功，用户名为：${ value }`);
+                } else {
+                    alert('请输入用户名！');
+                }
+            }
+
+            return (
+                <div className="box">
+                    <h2>函数组件</h2>
+                    <section>
+                        <label>用户名：</label>
+                        <input ref={ inputRef } placeholder="请输入用户名" />
+                    </section>
+                    <br />
+                    <button onClick={ submit }>提交</button>
+                </div>
+            );
+        }
+
+        const App = () =>  (
+            <div>
+                <ClassComponent />
+                <FunctionComponent />
+            </div>
+        )
+
+        ReactDOM.render(<App />, root);
+    </script>
+</body>
+
+</html>

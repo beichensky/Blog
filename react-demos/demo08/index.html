@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Effect</title>
+
+    <style>
+        .ani {
+            transition: all .5s;
+        }
+    </style>
+</head>
+<body>
+    <div id="root"></div>
+
+    <script src="../libs/react.min.js"></script>
+    <script src="../libs/react-dom.min.js"></script>
+    <script src="../libs/babel.min.js"></script>
+    <script type="text/jsx">
+
+        function fetchData() {
+            return new Promise(rseolve => {
+                setTimeout(() => {
+                    const todoList = [
+                        { id: 1, name: '吃饭'},
+                        { id: 2, name: '睡觉'},
+                        { id: 3, name: '敲代码'},
+                    ];
+                    rseolve(todoList);
+                }, 1000)
+            });
+        }
+
+        class App extends React.Component {
+
+            constructor(props) {
+                super(props);
+
+                this.state = {
+                    todos:[],
+                    toggle: true,
+                    loading: true,
+                }
+            }
+
+            handleWindowClick = () => {
+                this.setState({ toggle: !this.state.toggle });
+            }
+
+            componentDidMount() {
+
+                // 1、网络请求
+                fetchData()
+                    .then(result => {
+                        this.setState({ todos: result });
+                    })
+                    .finally(() => {
+                        this.setState({ loading: false });
+                    });
+
+                // 2、添加事件监听
+                window.addEventListener('click', this.handleWindowClick, false);
+            }
+
+            componentWillUnmount() {
+                // 移除事件监听
+                window.removeEventListener('click', this.handleWindowClick, false);
+            }
+            
+            render() {
+                const { todos, toggle, loading } = this.state;
+                return (
+                    <React.Fragment>
+                        <span style={{ color: 'gray', fontSize: 14 }}>随便点点试试</span>
+                        <h1 className="ani" style={{ height: toggle ? 50 : 200 }}>Hello React</h1>
+                        {
+                            loading ? 
+                                <p>Loading ...</p> :
+                                <ul>
+                                    { todos.map(todo => <li key={ todo.id }>{ todo.name }</li>) }
+                                </ul>
+                        }
+                        
+                    </React.Fragment>
+                );
+            }
+        }
+
+        ReactDOM.render(<App />, root);
+    </script>
+</body>
+</html>

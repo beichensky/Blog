@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>setState Usage</title>
+</head>
+<body>
+    <div id="root"></div>
+
+    <script src="../libs/react.min.js"></script>
+    <script src="../libs/react-dom.min.js"></script>
+    <script src="../libs/babel.min.js"></script>
+    <script type="text/jsx">
+    
+        class App extends React.Component {
+
+            state = {
+                count: 0
+            }
+
+            handleClick = () => {
+                // 1、同一 React 事件内的多次 setState 会被合并，最终的结果 count 只会 + 1
+
+                this.setState({
+                    count: this.state.count + 2
+                });
+
+                this.setState({
+                    count: this.state.count + 1
+                });
+            }
+
+            handleCallbackClick = () => {
+                /*
+                 * 2、setState 第二个参数是一个回调函数 callback，当上一次 setState 完成时，会触发这个回调函数
+                 * 在 callback 内部可以获取到最新的 state 值
+                 */
+
+                // 3、这种写法 setState 也不会被合并，两次操作都会按顺序执行
+
+                this.setState({
+                    count: this.state.count + 2
+                }, () => {
+                    this.setState({
+                        count: this.state.count + 1
+                    })
+                });
+            }
+
+            handleSetTimeoutClick = () => {
+                // 3、使用 setTimeout 的方式使用 setState 不会被合并，两次操作都会按顺序执行
+
+                setTimeout(() => this.setState({ count: this.state.count + 2 }));
+                setTimeout(() => this.setState({ count: this.state.count + 1 }));
+            }
+
+            handleOriginClick = () => {
+                // 4、在绑定的原生事件中多次调用 setState 不会被合并，两次操作都会执行
+
+                this.setState({
+                    count: this.state.count + 2
+                });
+
+                this.setState({
+                    count: this.state.count + 1
+                });
+            }
+
+            componentDidMount() {
+                const originBtn = document.querySelector('#originBtn');
+                originBtn.addEventListener('click', this.handleOriginClick, false);
+            }
+
+            componentWillUnmount() {
+                const originBtn = document.querySelector('#originBtn');
+                originBtn.removeEventListener('click', this.handleOriginClick, false);
+            }
+
+            render() {
+                return (
+                    <div>
+                        <p>count: { this.state.count }</p>
+                        <button onClick={ this.handleClick }>increment</button>
+                        <br />
+                        <br />
+                        <button onClick={ this.handleCallbackClick }>callback increment</button>
+                        <br />
+                        <br />
+                        <button onClick={ this.handleSetTimeoutClick }>setTimeout increment</button>
+                        <br />
+                        <br />
+                        <button id="originBtn">origin event increment</button>
+                    </div>
+                );
+            }
+        }
+
+        ReactDOM.render(<App />, root);
+    </script>
+</body>
+</html>

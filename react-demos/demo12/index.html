@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>错误边界</title>
+</head>
+<body>
+    <div id="root"></div>
+
+    <script src="../libs/react.min.js"></script>
+    <script src="../libs/react-dom.min.js"></script>
+    <script src="../libs/babel.min.js"></script>
+    <script type="text/jsx">
+
+        /**
+         * 错误边界处理：组件出现异常，会触发 static getDerivedStateFromError 和 componentDidCatch 生命周期
+         * 
+         * static getDerivedStateFromError 的返回值会合并到组件的 state 中作为最新的 state 值
+         */
+
+        class ErrorBoundary extends React.Component {
+            constructor(props) {
+                super(props);
+                this.state = {
+                    hasError: false,
+                    errorMsg: ''
+                };
+            }
+            
+            static getDerivedStateFromError(error) {
+                // 更新 state 使下一次渲染能够显示降级后的 UI
+                return { hasError: true };
+            }
+            
+            componentDidCatch(error, errorInfo) {
+                this.setState({errorMsg: error.message})
+                console.log('异常信息：', error, ' , ', errorInfo )
+            }
+            
+            render() {
+                const { hasError, errorMsg } = this.state;
+                if (hasError) {
+                    // 你可以自定义降级后的 UI 并渲染
+                    return <h1>Something went wrong, Error Message: {errorMsg}</h1>;
+                }
+            
+                return this.props.children; 
+            }
+        }
+
+        const App = () => {
+            const [count, setCount] = React.useState(0);
+
+            if (count > 0) {
+                throw TypeError('数据异常');
+            }
+
+            return (
+                <div>
+                    <h2>App 组件</h2>
+                    <p>count: { count }</p>
+                    <button onClick={() => setCount(count + 1)}>increment</button>
+                </div>
+            );
+        }
+
+        ReactDOM.render(<ErrorBoundary><App /></ErrorBoundary>, root);
+
+    </script>
+</body>
+
+</html>

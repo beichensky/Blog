@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Portals</title>
+
+    <style>
+        h1 {
+            margin: 0;
+        }
+        .modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+        }
+        .modal-inner {
+            position: relative;
+            width: 100%;
+            height: 100%;
+        }
+        .mask {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: black;
+            opacity: 0.5;
+        }
+        .modal-content-wrapper {
+            background: white;
+            position: absolute;
+            width: 300px;
+            height: 200px;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            margin: auto;
+            text-align: center;
+        }
+
+        .modal-content {
+            position: relative;
+            top: 0;
+            left: 0;
+            height: 100%;
+        }
+
+        .modal-content > footer {
+            position: absolute;
+            bottom: 0;
+            right: 0;
+            height: 30px;
+            width: 268px;
+            text-align: right;
+            padding: 6px 16px;
+            border-top: 1px solid;
+        }
+    </style>
+</head>
+<body>
+    <div id="root"></div>
+
+    <script src="../libs/react.min.js"></script>
+    <script src="../libs/react-dom.min.js"></script>
+    <script src="../libs/babel.min.js"></script>
+    <script type="text/jsx">
+
+        /**
+         * 通过 createPortal API，将 Modal 组件的真实节点挂载到新建的 div 元素上去
+         * 虽然在 React 树中，Modal 组件仍然在 App 组件中，但是在界面上，Modal 节点其实是挂载在了新的 div 节点上
+         */
+
+        const { useEffect, useState } = React;
+        const { createPortal } = ReactDOM;
+
+        const modalRoot = document.createElement('div');
+
+        /**
+         * Modal: 弹窗组件
+         */
+        function Modal({ children, onCancel }) {
+
+            useEffect(() => {
+                document.body.appendChild(modalRoot);
+                return () => {
+                    document.body.removeChild(modalRoot);
+                }
+            })
+
+            return createPortal(
+                <div className="modal">
+                    <div className="modal-inner">
+                        <div className="mask" />
+                        <section className="modal-content-wrapper">
+                            <div className="modal-content">
+                                <header>
+                                    <h1>提示弹窗</h1>
+                                </header>
+                                <hr />
+                                <content>{ children }</content>
+                                <footer>
+                                    <button onClick={onCancel}>关闭</button>
+                                </footer>
+                            </div>
+                        </section>
+                    </div>
+                </div>,
+                modalRoot
+            );
+        }
+
+        const App = () => {
+            const [visible, setVisible] = useState(false);
+            return (
+                <div>
+                    <h1>App</h1>
+                    <br />
+                    <button onClick={() => setVisible(true)}>展示弹窗</button>
+                    {visible && <Modal onCancel={() => setVisible(false)}>
+                        自定义内容
+                    </Modal>}
+                </div>
+            );
+        }
+
+        ReactDOM.render(<App />, root);
+    </script>
+</body>
+</html>

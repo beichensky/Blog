@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>useImperativeHandle</title>
+    <style>
+        .box {
+            margin: 20px;
+            padding: 20px;
+            border: 1px dashed pink;
+        }
+    </style>
+</head>
+<body>
+    <div id="root"></div>
+
+    <script src="../libs/react.min.js"></script>
+    <script src="../libs/react-dom.min.js"></script>
+    <script src="../libs/babel.min.js"></script>
+    <script type="text/jsx">
+
+        /**
+         * useImperativeHandle: 用来在父组件调用子组件中的状态或者方法
+         *     API: useImperativeHandle(ref, createHandle, [deps])
+         *     第一个参数是 ref 值，可以通过属性传入，也可以配合 forwardRef 使用
+         *     第二个参数是一个函数，返回一个对象，对象中的属性都会被挂载到第一个参数 ref 的 current 属性上
+         *     第三个参数是依赖的元素集合，同 useEffect、useCallback、useMemo，
+         *         当依赖发生变化时，第二个参数会重新执行，重新挂载到第一个参数的 current 属性上
+         *
+         * 注意点：
+         *     1、第三个参数，依赖必须按照要求填写，少了会导致返回的对象属性异常，多了会导致 createHandle 重复执行
+         *     2、一个组件或者 hook 中，对于同一个 ref，只能使用一次 useImperativeHandle，
+         *         多次的话，后面执行的 useImperativeHandle 的 createHandle 返回值
+         *         会替换掉前面执行的 useImperativeHandle 的 createHandle 返回值
+         */
+
+        const { useState, useRef, useImperativeHandle, useCallback } = React;
+
+        const ChildComponent = ({ actionRef }) => {
+
+            const [value, setValue] = useState('')
+
+            /**
+             * 随机修改 value 值的函数
+             */
+            const randomValue = useCallback(() => {
+                setValue(Math.round(Math.random() * 100) + '')
+            }, [])
+
+            /**
+             * 提交函数
+             */
+            const submit = () => {
+                if (value) {
+                    alert(`提交成功，用户名为：${ value }`);
+                } else {
+                    alert('请输入用户名！');
+                }
+            }
+
+            useImperativeHandle(actionRef, () => {
+                return {
+                    randomValue,
+                    submit,
+                }
+            }, [randomValue, submit])
+
+            /* !! 返回多个属性要按照上面这种写法，不能像下面这样使用多个 useImperativeHandle
+                useImperativeHandle(actionRef, () => {
+                    return {
+                        submit,
+                    }
+                }, [submit])
+
+                useImperativeHandle(actionRef, () => {
+                    return {
+                        randomValue
+                    }
+                }, [randomValue])
+            */
+
+            return (
+                <div className="box">
+                    <h2>子组件</h2>
+                    <section>
+                        <label>用户名：</label>
+                        <input value={value} placeholder="请输入用户名" onChange={e => setValue(e.target.value)} />
+                    </section>
+                    <br />
+                </div>
+            );
+        }
+
+        const App = () =>  {
+
+            const childRef = useRef();
+            
+            return (
+                <div>
+                    <ChildComponent actionRef={childRef} />
+                    <button onClick={ () => childRef.current.submit() }>调用子组件的提交函数</button>
+                    <br />
+                    <br />
+                    <button onClick={ () => childRef.current.randomValue() }>随机修改子组件的 input 值 </button>
+                </div>
+            )
+        }
+
+        ReactDOM.render(<App />, root);
+    </script>
+</body>
+
+</html>

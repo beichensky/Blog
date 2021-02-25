@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PureComponent & memo</title>
+    <style>
+        .box {
+            margin: 20px;
+            padding: 20px;
+            border: 1px dashed pink;
+        }
+    </style>
+</head>
+<body>
+    <div id="root"></div>
+
+    <script src="../libs/react.min.js"></script>
+    <script src="../libs/react-dom.min.js"></script>
+    <script src="../libs/babel.min.js"></script>
+    <script type="text/jsx">
+
+        /**
+         * Fragment: 可以作为标签包裹子元素，并不会在 DOM 中生成真实节点
+         * PureComponent: 会对类组件的 props 和 state 做一次浅比较，只有当数据发生变化式，组件才会重新渲染
+         * memo: 作用和 PureComponent 类似，只不过是作为高阶组件，作用在函数组件上
+         */
+
+        const { Fragment, PureComponent, memo, useState, Component } = React;
+
+        class ClassComponent extends PureComponent {
+
+            render() {
+                console.log('PureComponent render');
+                return (
+                    <div className="box">
+                        <h1>PureComponent 组件</h1>
+                        <p>count: {this.props.count}</p>
+                    </div>
+                );
+            }
+        }
+
+        const FunctionComponent = memo((props) => {
+            console.log('memo function render');
+
+            return (
+                <div className="box">
+                    <h1>memo 函数组件</h1>
+                    <p>num: {props.num}</p>
+                </div>
+            );
+        })
+
+        const App = () => {
+            const [count, setCount] = useState(0);
+            const [num, setNum] = useState(0);
+            return (
+                <Fragment>
+                    <p>打开控制台查看 render 日志</p>
+                    <div>
+                        <button onClick={ () => setCount(count + 1) }>increment count</button> | {' '}
+                        <button onClick={ () => setNum(num + 1) }>increment num</button>
+                        <ClassComponent count={ count }/>
+                        <FunctionComponent num={ num }/>
+                    </div>
+                </Fragment>
+            );
+        }
+
+        ReactDOM.render(<App />, root);
+    </script>
+</body>
+
+</html>

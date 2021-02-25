@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>useCallback & useMemo</title>
+</head>
+<body>
+    <div id="root"></div>
+
+    <script src="../libs/react.min.js"></script>
+    <script src="../libs/react-dom.min.js"></script>
+    <script src="../libs/babel.min.js"></script>
+    <script type="text/jsx">
+
+        /**
+         * 函数组件的渲染，会导致函数重新执行，则函数内部的变量和函数都会被重新创建、执行
+         *
+         * useCallback(fn, deps): 会对函数进行缓存，当第二个参数依赖项发生变化时，才会重新生成新的函数
+         *      fn: 返回的函数
+         *      deps: 依赖项集合，是个数组
+         *      返回值是一个被缓存的函数
+         *
+         * useMemo(fn, deps): 会对函数的返回值进行缓存，当第二个参数依赖项发生变化时，才会重新执行，返回新的数据
+         *      fn: 需要执行的函数
+         *      deps: 依赖项集合，是个数组
+         *      返回值是一个被缓存的值，可以是基础类型或者对象类型，也可以是函数，甚至是 `React` 组件
+         *
+         * useCallback(fn, deps) 相当于 useMemo(() => fn, deps)
+         */
+
+        const { Fragment, useCallback, useMemo, useState } = React;
+        
+        const App = () => {
+            const [count, setCount] = useState(0);
+            const [num, setNum] = useState(0);
+
+            const doubleCount = useMemo(() => {
+                return count * 2;
+            }, [count])
+
+            const alertNum = useCallback(() => {
+                alert(`num 值：${num}`);
+            }, [num])
+
+            console.log('render');
+
+            return (
+                <Fragment>
+                    <p>count: { count }</p>
+                    <p>doubleCount: { doubleCount }</p>
+                    <p>num: { num }</p>
+                    <button onClick={ () => setCount(count + 1) }>increment count</button> | {' '}
+                    <button onClick={ () => setNum(num + 1) }>increment num</button> | {' '}
+                    <button onClick={ alertNum }>alert num</button>
+                </Fragment>
+            );
+        }
+
+        ReactDOM.render(<App />, root);
+    </script>
+</body>
+
+</html>

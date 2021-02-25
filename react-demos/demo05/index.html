@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Component Props</title>
+
+    <style>
+        .box {
+            border: 1px solid pink;
+            margin: 20px;
+            padding: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div id="root"></div>
+
+    <script src="../libs/react.min.js"></script>
+    <script src="../libs/react-dom.min.js"></script>
+    <script src="../libs/babel.min.js"></script>
+    <script type="text/jsx">
+
+        /**
+         * 1、类组件的实例上会挂载 props 属性，包含父组件传递过来的所有参数
+         *
+         * props 中会包含一个 children 属性，标签内的所有内容都会被存放到 children 中。
+         * 可以是标签、组件或者文本
+         */
+        class ClassComponent extends React.Component {
+            render() {
+                return (
+                    <div className="box">
+                        <h1>Class Component</h1>
+                        <p>Receive Message: { this.props.msg }</p>
+                        { this.props.children }
+                    </div>
+                );
+            }
+        }
+
+        /**
+         * 2、函数组件会接受一个 props 参数，包含父组件传递过来的所有参数
+         *
+         * props 中会包含一个 children 属性，标签内的所有内容都会被存放到 children 中。
+         * 可以是标签、组件或者文本
+         */
+        const FunctionComponent = (props) => {
+            return (
+                <div className="box">
+                    <h1>Function Component</h1>
+                    <p>Receive Message: { props.msg }</p>
+                    { props.children }
+                </div>
+            );
+        }
+
+        const App = () => (
+            <div>
+                <h1>App</h1>
+                <ClassComponent msg="App 传递过来的 msg 信息">
+                    App 传递过来的 children 是文本
+                </ClassComponent>
+                <FunctionComponent  msg="App 传递过来的 msg 信息">
+                    App 传递过来的 children 是 ClassComponent 组件：
+                    <ClassComponent msg="Function Component 传递过来的 msg 信息"/>
+                </FunctionComponent>
+            </div>
+        );
+
+        ReactDOM.render(<App />, root);
+    </script>
+</body>
+</html>

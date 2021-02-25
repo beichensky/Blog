@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>React Component</title>
+</head>
+<body>
+    <div id="root"></div>
+
+    <script src="../libs/react.min.js"></script>
+    <script src="../libs/react-dom.min.js"></script>
+    <script src="../libs/babel.min.js"></script>
+    <script type="text/jsx">
+
+        // 1、类组件，需要继承 React.Component，render 函数的执行结果会被作为界面展示内容
+        class ClassComponent extends React.Component {
+            render() {
+                return (
+                    <div>
+                        <h1>Hello, Class Component</h1>
+                    </div>
+                );
+            }
+        }
+
+        // 2、函数组件，本身就是一个函数，函数的执行结果会被作为界面展示内容
+        const FunctionComponent = () => {
+            return (
+                <div>
+                    <h1>Hello, Function Component</h1>
+                </div>
+            );
+        }
+
+        const App = () => (
+            <div>
+                <ClassComponent />
+                <FunctionComponent />
+            </div>
+        )
+
+        ReactDOM.render(<App />, root);
+    </script>
+</body>
+
+</html>

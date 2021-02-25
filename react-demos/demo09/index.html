@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>React LifeCycle</title>
+</head>
+<body>
+    <div id="root"></div>
+
+    <script src="../libs/react.min.js"></script>
+    <script src="../libs/react-dom.min.js"></script>
+    <script src="../libs/babel.min.js"></script>
+    <script type="text/jsx">
+
+        /**
+         * 生命周期执行过程
+         *
+         * 初始化：constructor -> static getDerivedStateFromProps -> render -> componentDidMount
+         * 更新：static getDerivedStateFromProps -> shouldComponentUpdate -> render -> getSnapshotBeforeUpdate -> componentDidUpdate
+         * 销毁：componentWillUnmount
+         */
+
+        class LifeCycleComponent extends React.Component {
+
+            /**
+             * 组件初次渲染或者更新之前触发
+             *
+             * 返回值会作为新的 state 值与组件中之前的 state 进行合并
+             */
+            static getDerivedStateFromProps(nextProps, prevState) {
+                console.log('LifeCycleComponent >>>', 'getDerivedStateFromProps ----', 'init or update');
+                return null;
+            }
+
+            /**
+             * 组件创建时调用
+             * 可以在这里做一些初始化操作
+             */
+            constructor(props) {
+                super(props);
+                console.log('LifeCycleComponent >>>', 'constructor ----', 'init');
+                this.state = {
+                    count: 0
+                }
+            }
+
+            /**
+             * 组件初次挂载完成时触发
+             * 可以在这里处理一些异步操作，比如：事件监听，网络请求等
+             */
+            componentDidMount() {
+                console.log('LifeCycleComponent >>>', 'componentDidMount ----', 'mounted');
+            }
+
+            /**
+             * 组件触发更新时调用，决定组件是否需要更新
+             * 返回 true，则组件会被更新，返回 false，则组件停止更新
+             */
+            shouldComponentUpdate(nextProps, nextState) {
+                console.log('LifeCycleComponent >>>', 'shouldComponentUpdate ----', 'need update ? ');
+                return true;
+            }
+
+            /**
+             * 组将 render 之后，提交更新之前触发，返回值会作为 componentDidUpdate 的第三个参数传入
+             */
+            getSnapshotBeforeUpdate(prevProps, prevState) {
+                console.log('LifeCycleComponent >>>', 'getSnapshotBeforeUpdate ----', 'before update');
+                return null;
+            }
+
+            /**
+             * 组件更新结束后触发
+             */
+            componentDidUpdate(prevProps, prevState, snapshot) {
+                console.log('LifeCycleComponent >>>', 'componentDidUpdate ----', 'updated');
+            }
+
+            /**
+             * 组将即将被卸载时触发
+             */
+            componentWillUnmount() {
+                console.log('LifeCycleComponent >>>', 'componentWillUnmount ----', 'will unmount');
+            }
+
+            increment = () => {
+                const { count } = this.state;
+                this.setState({
+                    count: count + 1
+                });
+            }
+
+            /**
+             * 渲染函数 render
+             */
+            render() {
+                console.log('LifeCycleComponent >>>', 'render');
+                const { msg } = this.props;
+                const { count } = this.state;
+                return (
+                    <div>
+                        <h1>LifeCycleComponent</h1>
+                        <p>Receive Message: { msg }</p>
+                        <p>count: { count }</p>
+                        <button onClick={ this.increment }>increment</button>
+                    </div>
+                );
+            }
+        }
+
+        class App extends React.Component {
+
+            state = {
+                message: 'Hello World',
+                show: true
+            }
+
+            render() {
+                const { message, show } = this.state;
+                return (
+                    <div>
+                        <button onClick={ () => this.setState({ message: 'Hello React' }) }>修改 message </button> | {' '}
+                        <button onClick={ () => this.setState({ show: !show }) }>
+                            { show ? '销毁 LifeCycleComponent' : '创建 LifeCycleComponent' }
+                        </button>
+                        { show && <LifeCycleComponent msg={ message } /> }
+                    </div>
+                );
+            }
+        }
+
+        ReactDOM.render(<App />, root);
+    </script>
+</body>
+
+</html>

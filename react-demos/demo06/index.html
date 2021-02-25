@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>React setState</title>
+</head>
+<body>
+    <div id="root"></div>
+
+    <script src="../libs/react.min.js"></script>
+    <script src="../libs/react-dom.min.js"></script>
+    <script src="../libs/babel.min.js"></script>
+    <script type="text/jsx">
+    
+        /*
+         * 类组件实例中的 state 属性控制着组件内的状态变化
+         * 可以在 state 属性中设置状态初始值
+         * 通过实例的 setState 函数可以更新 state 内容，重新渲染界面
+         * setState 接受两个参数，第一个参数是对象或者是函数，第二个参数回调函数 callback
+         * 当上一次的 setState 执行完毕后，会触发 callback 回调函数
+         * 第一个参数是函数时，函数的参数是上一次的 state 值，返回值是希望更新的 state 值
+         */
+
+         /**
+          * 注意：
+          *     1、必须使用 setState 才能主动触发界面的重新渲染
+          *     2、同一 React 事件内，多次 setState 的对象会被合并处理
+          */
+
+        class App extends React.Component {
+
+            state = {
+                count: 0
+            }
+
+            increment = () => {
+                this.setState({
+                    count: this.state.count + 1
+                }, () => {
+                    console.log(`最新的 state 值：${this.state.count}`)
+                });
+            }
+
+            decrement = () => {
+                this.setState((prevState) => ({
+                    count: prevState.count - 1
+                }));
+            }
+
+            render() {
+                return (
+                    <div>
+                        <p>count: { this.state.count }</p>
+                        <button onClick={ this.increment }>increment</button>
+                        <br />
+                        <br />
+                        <button onClick={ this.decrement }>decrement</button>
+                    </div>
+                );
+            }
+        }
+
+        ReactDOM.render(<App />, root);
+    </script>
+</body>
+</html>
