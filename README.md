@@ -20,6 +20,9 @@
 
 1. [十分钟学会 react-redux](https://github.com/beichensky/Blog/issues/8)
 
-
+1. [从零到一实现 Redux](https://github.com/beichensky/Blog/issues/9)
+
+1. [从零到一实现 react-redux](https://github.com/beichensky/Blog/issues/10)
+
 
 更多内容持续更新中。。。
