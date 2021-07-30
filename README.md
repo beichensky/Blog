@@ -26,5 +26,14 @@
 
 1. [通俗易懂的 React Fiber 实现教程](https://github.com/beichensky/Blog/issues/11)
 
+1. [使用 Vite 尝鲜 React 18](https://github.com/beichensky/Blog/issues/13)
 
-更多内容持续更新中。。。
+1. [React 18 新特性（一）：自动批量更新](https://github.com/beichensky/Blog/issues/14)
+
+
+## 🌈  TypeScript 系列目录
+
+1. [TypeScript 高级类型及用法](https://github.com/beichensky/Blog/issues/12)
+
+
+> 更多内容持续更新中。。。
