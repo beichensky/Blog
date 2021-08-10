@@ -30,6 +30,7 @@
 
 1. [React 18 新特性（一）：自动批量更新](https://github.com/beichensky/Blog/issues/14)
 
+1. [React 18 新特性（二）：Suspense & SuspenseList](https://github.com/beichensky/Blog/issues/15)
 
 ## 🌈  TypeScript 系列目录
 
