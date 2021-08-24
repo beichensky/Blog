@@ -32,6 +32,8 @@
 
 1. [React 18 新特性（二）：Suspense & SuspenseList](https://github.com/beichensky/Blog/issues/15)
 
+1. [React 18 新特性（二）：渐变更新](https://github.com/beichensky/Blog/issues/16)
+
 ## 🌈  TypeScript 系列目录
 
 1. [TypeScript 高级类型及用法](https://github.com/beichensky/Blog/issues/12)
